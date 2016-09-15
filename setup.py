@@ -8,7 +8,7 @@ except ImportError:
 
 setup(
     name="ugoira_conv",
-    version="0.1",
+    version="0.2.0",
     description="ugoira converter",
     long_description="convert ugoira (pixiv animations) to webm or gif",
     url="https://github.com/mikf/ugoira-conv",

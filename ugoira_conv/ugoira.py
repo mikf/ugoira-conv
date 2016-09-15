@@ -48,27 +48,30 @@ class UgoiraConverter():
 
     def _convert_gif(self, path):
         """Convert ugoira to animated gif"""
-        cmd = ["ffmpeg", "-safe", "0", "-i", "-", "-an", "-y", path + ".gif"]
-        self._call(cmd)
+        self._call(
+            ["ffmpeg", "-protocol_whitelist", "file,pipe", "-safe", "0",
+             "-i", "-", "-an", "-y", path + ".gif"])
 
     def _convert_gifpalette(self, path):
         """Convert ugoira to animated gif while using a palette"""
         palette = "palette.png"
         try:
             self._call(
-                ["ffmpeg", "-safe", "0", "-i", "-", "-an",
-                 "-vf", "palettegen", "-y", palette])
+                ["ffmpeg", "-protocol_whitelist", "file,pipe", "-safe", "0",
+                 "-i", "-", "-an", "-vf", "palettegen", "-y", palette])
             self._call(
-                ["ffmpeg", "-safe", "0", "-i", "-", "-i", palette, "-an",
+                ["ffmpeg", "-protocol_whitelist", "file,pipe", "-safe", "0",
+                 "-i", "-", "-i", palette, "-an",
                  "-filter_complex", "paletteuse", "-y", path + ".gif"])
         finally:
             util.silentremove(palette)
 
     def _convert_webm(self, path):
         """Convert ugoira to webm"""
-        cmd = ["ffmpeg", "-safe", "0", "-i", "-", "-an",
-               "-c:v", "libvpx", "-quality", "best", "-qmin", "0", "-qmax", "20",
-               "-bufsize", "1000k", "-crf", "4", "-f", "webm", "-pass"]
+        cmd = ["ffmpeg", "-protocol_whitelist", "file,pipe", "-safe", "0",
+               "-i", "-", "-an", "-c:v", "libvpx", "-quality", "best",
+               "-qmin", "0", "-qmax", "20", "-bufsize", "1000k", "-crf", "4",
+               "-f", "webm", "-pass"]
         try:
             self._call(cmd + ["1", "-y", "/dev/null"])
             self._call(cmd + ["2", "-y", path + ".webm"])
